@@ -1,0 +1,7 @@
+.vscode/settings.json
+.qmake.stash
+Makefile
+moc_*
+qrc_*
+*.o
+monitor
