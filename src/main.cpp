@@ -52,6 +52,9 @@ int main(int argc, char *argv[]) {
     });
 
     QVBoxLayout *layout = new QVBoxLayout;
+    layout->setContentsMargins(0, 10, 0, 0);
+    layout->setSpacing(0); 
+
     Section *perfSection = new Section("Performance Cores", &performanceDots, &performanceChart);
     Section *effSection = new Section("Efficiency Cores", &efficiencyDots, &efficiencyChart);
     layout->addWidget(perfSection);
