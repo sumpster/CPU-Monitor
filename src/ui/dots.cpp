@@ -16,10 +16,10 @@ void Dots::paintEvent(QPaintEvent *event) {
 	const int n = data->usage.size();
 	const int cols = n / 4;
     const int margin = 5;
-    const int dotSize = ((size.width() - margin) / 4) - margin;
+    const float dotSize = ((size.width() - margin) / 4.0) - margin;
 
-    int x = margin;
-    int y = margin;
+    float x = margin;
+    float y = margin;
 	int i = 0;
     for (int u : data->usage) {
 		QColor indiCol = blendColors(palette.Inactive, palette.Active, u);
