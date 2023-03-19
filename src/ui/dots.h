@@ -12,7 +12,6 @@ class Dots : public QWidget {
 
 	protected:
 		void paintEvent(QPaintEvent *event) override;
-		void resizeEvent(QResizeEvent *event) override;
 
 	private:
 		QColor blendColors(const QColor& from, const QColor& to, int value);

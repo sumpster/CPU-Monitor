@@ -5,7 +5,7 @@
 
 #include "section.h"
 
-Section::Section(const QString &title, QWidget *left, QWidget *right, QWidget *parent) : QWidget(parent) {
+Section::Section(const QString &title, QWidget *left, QWidget *right, QWidget *parent) : QWidget(parent), left(left) {
 	QVBoxLayout *rowLayout = new QVBoxLayout();
 
 	QLabel *titleLabel = new QLabel(title);
@@ -21,4 +21,11 @@ Section::Section(const QString &title, QWidget *left, QWidget *right, QWidget *p
 
 	rowLayout->addLayout(contentLayout);
 	setLayout(rowLayout);
+}
+
+void Section::resizeEvent(QResizeEvent *event) {
+	Q_UNUSED(event);
+	int h = left->height();
+    left->setMinimumWidth(h);
+	left->setMaximumWidth(h);
 }

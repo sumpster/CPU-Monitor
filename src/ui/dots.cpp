@@ -3,7 +3,7 @@
 #include "dots.h"
 
 Dots::Dots(Palette palette, QWidget *parent) : QWidget(parent), palette(palette) {
-	setMinimumSize(QSize(200, 200));
+	setMinimumSize(QSize(100, 100));
 	data = {};
 }
 
@@ -32,14 +32,6 @@ void Dots::paintEvent(QPaintEvent *event) {
         }
 		i++;
     }
-}
-
-void Dots::resizeEvent(QResizeEvent *event) {
-	Q_UNUSED(event);
-    int side = qMin(width(), height());
-//    setFixedSize(side, side);
-    setMinimumSize(side, side);
-    setMaximumSize(side, side);
 }
 
 void Dots::setData(CoreStats* data) {
