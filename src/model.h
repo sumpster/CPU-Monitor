@@ -10,7 +10,8 @@
 struct CoreStats {
 	CoreType type;
 	std::vector<int> usage;
-	std::deque<int> histogram;
+	std::deque<int> avgHistogram;
+	std::deque<int> maxHistogram;
 };
 
 class Model : public QObject {

@@ -51,16 +51,22 @@ void Model::update() {
 		CoreStats* cs = new CoreStats;
 		cs->type = cu.type;
 		cs->usage = std::vector<int>(1, usage);
-		cs->histogram = std::deque<int>();
+		cs->avgHistogram = std::deque<int>();
+		cs->maxHistogram = std::deque<int>();
 		stats.push_back(cs);
 	}
 
 	for (CoreStats* cs : stats) {
 		int avg = 0;
-		for (int usage : cs->usage)
+		int max = 0;
+		for (int usage : cs->usage) {
 			avg += usage;
+			if (usage > max)
+				max = usage;
+		}
 		avg /= cs->usage.size();
-		cs->histogram.push_back(avg);
+		cs->avgHistogram.push_back(avg);
+		cs->maxHistogram.push_back(max);
 	}
 
 
