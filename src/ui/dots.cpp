@@ -13,6 +13,9 @@ void Dots::paintEvent(QPaintEvent *event) {
 	QRect size = rect();
 	painter.fillRect(size, QColor("101010"));
 
+	QPen borderPen(blendColors(palette.Inactive, palette.Active, 10));
+	painter.setPen(borderPen);
+
 	const int n = data->usage.size();
 	const int cols = n / 4;
     const int margin = 5;
@@ -23,8 +26,9 @@ void Dots::paintEvent(QPaintEvent *event) {
 	int i = 0;
     for (int u : data->usage) {
 		QColor indiCol = blendColors(palette.Inactive, palette.Active, u);
-        QRectF dot(x, y, dotSize, dotSize);
+        QRect dot(x, y, dotSize, dotSize);
 		painter.fillRect(dot, indiCol);
+		painter.drawRect(dot);
         x += dotSize + margin;
         if ((i + 1) % cols == 0) {
             x = margin;
