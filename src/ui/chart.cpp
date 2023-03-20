@@ -48,7 +48,7 @@ void Chart::paintAvg(QPainter &painter, std::deque<int> values) {
 	}
 
 	int startX = widgetWidth - values.size() + dataIndex;
-	for (int i = startX, j = dataIndex; j < values.size(); ++i, ++j) {
+	for (int i = startX, j = dataIndex; j < (int)values.size(); ++i, ++j) {
 		int x = i;
 		int y = widgetHeight - (values[j] * widgetHeight / 100);
 
@@ -68,7 +68,7 @@ void Chart::paintMax(QPainter &painter, std::deque<int> values) {
 	int prevX = widgetWidth - values.size() + dataIndex;
 	int prevY = widgetHeight - (values[dataIndex] * widgetHeight / 100);
 
-	for (int i = prevX + 1, j = dataIndex + 1; j < values.size(); ++i, ++j) {
+	for (int i = prevX + 1, j = dataIndex + 1; j < (int)values.size(); ++i, ++j) {
 		int x = i;
 		int y = widgetHeight - (values[j] * widgetHeight / 100);
 
