@@ -1,19 +1,26 @@
 #include <QColor>
+#include <QPalette>
+#include <QVariant>
 
 #include "dots.h"
 
-Dots::Dots(Palette palette, QWidget *parent) : QWidget(parent), palette(palette) {
+Dots::Dots(QString type, QWidget *parent) : QWidget(parent) {
 	setMinimumSize(QSize(100, 100));
+	setProperty("type", type);
 	data = {};
 }
 
 void Dots::paintEvent(QPaintEvent *event) {
 	Q_UNUSED(event);
+
+	QColor color = palette().color(QPalette::Text);
+	QColor background = palette().color(QPalette::Window);
+
 	QPainter painter(this);
 	QRect size = rect();
-	painter.fillRect(size, QColor("101010"));
+	painter.fillRect(size, background);
 
-	QPen borderPen(blendColors(palette.Inactive, palette.Active, 10));
+	QPen borderPen(blendColors(background, color, 10));
 	painter.setPen(borderPen);
 
 	const int n = data->usage.size();
@@ -25,7 +32,7 @@ void Dots::paintEvent(QPaintEvent *event) {
     float y = margin;
 	int i = 0;
     for (int u : data->usage) {
-		QColor indiCol = blendColors(palette.Inactive, palette.Active, u);
+		QColor indiCol = blendColors(background, color, u);
         QRect dot(x, y, dotSize, dotSize);
 		painter.fillRect(dot, indiCol);
 		painter.drawRect(dot);

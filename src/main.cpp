@@ -9,10 +9,12 @@
 #include "hw/linux.h"
 #include "ui/dots.h"
 #include "ui/chart.h"
-#include "ui/style.h"
 #include "ui/section.h"
 
 #include <vector>
+
+#define PERFORMANCE "performance"
+#define EFFICIENCY "efficiency"
 
 QString loadStyle() {
     QFile file(":dark.qss");
@@ -33,10 +35,10 @@ int main(int argc, char *argv[]) {
 	Model model(access);
     QTimer timer;
 
-	Dots performanceDots(Color::Performance);
-	Chart performanceChart(Color::Performance);
-	Dots efficiencyDots(Color::Efficiency);
-	Chart efficiencyChart(Color::Efficiency);
+	Dots performanceDots(PERFORMANCE);
+	Chart performanceChart(PERFORMANCE);
+	Dots efficiencyDots(EFFICIENCY);
+	Chart efficiencyChart(EFFICIENCY);
 
 	performanceDots.setData(model.getSection(CoreType::Performance));
 	performanceChart.setData(model.getSection(CoreType::Performance));

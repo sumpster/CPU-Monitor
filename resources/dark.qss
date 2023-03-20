@@ -2,3 +2,13 @@ QWidget {
     background-color: #202020;
     color: #f0f0f0;
 }
+
+*[type="performance"] {
+	background-color: #000000;
+	color: #3040ff;
+}
+
+*[type="efficiency"] {
+	background-color: #000000;
+	color: #20ff40;
+}

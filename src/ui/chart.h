@@ -2,15 +2,17 @@
 
 #include <deque>
 
+#include <QString>
 #include <QWidget>
 #include <QPainter>
 
-#include "palette.h"
 #include "../model.h"
 
 class Chart : public QWidget {
+	Q_PROPERTY(QString type)
+
 	public:
-		Chart(Palette palette, QWidget *parent = nullptr);
+		Chart(QString type, QWidget *parent = nullptr);
 		void setData(CoreStats *data);
 
 	protected:
@@ -20,6 +22,5 @@ class Chart : public QWidget {
 		void paintAvg(QPainter &painter, std::deque<int> values);
 		void paintMax(QPainter &painter, std::deque<int> values);
 
-		Palette palette;
 		CoreStats* data;
 };

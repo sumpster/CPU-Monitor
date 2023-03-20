@@ -1,13 +1,15 @@
 #pragma once
 
+#include <QString>
 #include <QtWidgets>
 
-#include "palette.h"
 #include "../model.h"
 
 class Dots : public QWidget {
+	Q_PROPERTY(QString type)
+	
 	public:
-		Dots(Palette palette, QWidget *parent = nullptr);
+		Dots(QString type, QWidget *parent = nullptr);
 		void setData(CoreStats* data);
 
 	protected:
@@ -16,6 +18,5 @@ class Dots : public QWidget {
 	private:
 		QColor blendColors(const QColor& from, const QColor& to, int value);
 
-		Palette palette;
 		CoreStats* data;
 };

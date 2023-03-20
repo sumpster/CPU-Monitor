@@ -1,10 +1,15 @@
 #include <cassert>
 #include <deque>
 
+#include <QColor>
+#include <QPalette>
+#include <QVariant>
+
 #include "chart.h"
 
-Chart::Chart(Palette palette, QWidget *parent) : QWidget(parent), palette(palette) {
+Chart::Chart(QString type, QWidget *parent) : QWidget(parent) {
 	setMinimumSize(100, 100);
+	setProperty("type", type);
 }
 
 void Chart::setData(CoreStats* data) {
@@ -15,14 +20,17 @@ void Chart::setData(CoreStats* data) {
 void Chart::paintEvent(QPaintEvent *event) {
 	Q_UNUSED(event);
 
+	QColor color = palette().color(QPalette::Text);
+	QColor background = palette().color(QPalette::Window);
+
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 
 	QRect size = rect();
-	painter.fillRect(size, QColor("101010"));
+	painter.fillRect(size, background);
 
 	QPen pen;
-	pen.setColor(palette.Active);
+	pen.setColor(color);
 	pen.setWidth(1);
 	painter.setPen(pen);
 
