@@ -5,10 +5,10 @@ QWidget {
 
 *[type="performance"] {
 	background-color: #000000;
-	color: #3040ff;
+	color: #00adce;
 }
 
 *[type="efficiency"] {
 	background-color: #000000;
-	color: #20ff40;
+	color: #00c590;
 }

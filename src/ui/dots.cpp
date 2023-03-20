@@ -52,8 +52,8 @@ void Dots::setData(CoreStats* data) {
 
 QColor Dots::blendColors(const QColor& from, const QColor& to, int value) {
     value = qBound(0, value, 20);
-    double fractionFrom = (20 - value) / 20.0;
-    double fractionTo = value / 20.0;
+    double fractionTo = value * value / 400.0;
+    double fractionFrom = 1 - fractionTo;
 
     int red = static_cast<int>(fractionFrom * from.red() + fractionTo * to.red());
     int green = static_cast<int>(fractionFrom * from.green() + fractionTo * to.green());
