@@ -4,6 +4,8 @@
 
 #include "dots.h"
 
+#define VMAX 100
+
 Dots::Dots(QString type, QWidget *parent) : QWidget(parent) {
 	setMinimumSize(QSize(100, 100));
 	setProperty("type", type);
@@ -20,7 +22,7 @@ void Dots::paintEvent(QPaintEvent *event) {
 	QRect size = rect();
 	painter.fillRect(size, background);
 
-	QPen borderPen(blendColors(background, color, 10));
+	QPen borderPen(blendColors(background, color, 20));
 	painter.setPen(borderPen);
 
 	const int n = data->usage.size();
@@ -51,8 +53,8 @@ void Dots::setData(CoreStats* data) {
 }
 
 QColor Dots::blendColors(const QColor& from, const QColor& to, int value) {
-    value = qBound(0, value, 20);
-    double fractionTo = value * value / 400.0;
+    value = qBound(0, value, VMAX);
+    double fractionTo = value / (double)VMAX;
     double fractionFrom = 1 - fractionTo;
 
     int red = static_cast<int>(fractionFrom * from.red() + fractionTo * to.red());

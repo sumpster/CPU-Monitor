@@ -68,6 +68,6 @@ int main(int argc, char *argv[]) {
 	widget.setMinimumSize(700, 400);
     widget.show();
 
-    timer.start(200);
+    timer.start(100);
     return app.exec();
 }
