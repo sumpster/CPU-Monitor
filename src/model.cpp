@@ -1,11 +1,13 @@
 #include "model.h"
 
+#define BUCKET_SIZE 3
+
 Model::Model(CPUAccess access) : QObject(), access(access) {
 	update();
 }
 
 Model::~Model() {
-	for (CoreStats* cs : stats)
+	for (CoreStats *cs : stats)
 		delete cs;
 }
 
@@ -14,7 +16,7 @@ int Model::getSectionCount() {
 }
 
 CoreStats* Model::getSection(CoreType type) {
-	for (CoreStats* cs : stats)
+	for (CoreStats *cs : stats)
 		if (type == cs->type)
 			return cs;
 
@@ -30,13 +32,13 @@ std::string Model::getNameForType(CoreType type) {
 }
 
 void Model::update() {
-	for (CoreStats* cs : stats)
+	for (CoreStats *cs : stats)
 		cs->usage.clear();
 
 	std::vector<CoreUsage> usageData = access.getCoreUsage();
 	for (CoreUsage cu : usageData) {
 		bool exists = false;
-		for (CoreStats* cs : stats) {
+		for (CoreStats *cs : stats) {
 			if (cu.type == cs->type) {
 				int usage = computeUsage(cu.used, cu.idle);
 				cs->usage.push_back(usage);
@@ -48,15 +50,15 @@ void Model::update() {
 			continue;
 
 		int usage = computeUsage(cu.used, cu.idle);
-		CoreStats* cs = new CoreStats;
+		CoreStats *cs = new CoreStats;
 		cs->type = cu.type;
 		cs->usage = std::vector<int>(1, usage);
-		cs->avgHistogram = std::deque<int>();
-		cs->maxHistogram = std::deque<int>();
+		cs->histogram = std::deque<HistogramEntry*>();
 		stats.push_back(cs);
 	}
 
-	for (CoreStats* cs : stats) {
+	bool updateHistogram = false;
+	for (CoreStats *cs : stats) {
 		int avg = 0;
 		int max = 0;
 		for (int usage : cs->usage) {
@@ -65,12 +67,29 @@ void Model::update() {
 				max = usage;
 		}
 		avg /= cs->usage.size();
-		cs->avgHistogram.push_back(avg);
-		cs->maxHistogram.push_back(max);
+
+		HistogramEntry *current = cs->histogram.size() == 0 ? nullptr : cs->histogram.back();
+
+		if (current == nullptr || current->n == BUCKET_SIZE) {
+			current = new HistogramEntry;
+			current->avg = avg;
+			current->max = max;
+			current->n = 1;
+			cs->histogram.push_back(current);
+		} else {
+			current->n++;
+			current->avg += avg;
+			if (max > current->max)
+				current->max = max;
+		}
+
+		if (current->n == BUCKET_SIZE)
+			updateHistogram = true;
 	}
 
-
 	emit updated();
+	if (updateHistogram)
+		emit updatedHistogram();
 }
 
 int Model::computeUsage(int used, int idle) {

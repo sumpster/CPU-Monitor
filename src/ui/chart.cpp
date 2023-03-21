@@ -34,47 +34,39 @@ void Chart::paintEvent(QPaintEvent *event) {
 	pen.setWidth(1);
 	painter.setPen(pen);
 
-	paintAvg(painter, data->avgHistogram);
-	paintMax(painter, data->maxHistogram);
+	paintBars(painter, data->histogram);
 }
 
-void Chart::paintAvg(QPainter &painter, std::deque<int> values) {
+void Chart::paintBars(QPainter &painter, std::deque<HistogramEntry*> histogram) {
+	QColor avgColor = palette().color(QPalette::Text);
+	QColor maxColor = palette().color(QPalette::Text);
+	maxColor.setAlpha(50);
+
 	const int widgetHeight = height();
 	const int widgetWidth = width();
+	const float scaling = widgetHeight / 100.0;
+	int entryWidth = 4; // 3 pixels wide + 1 pixel free space
+	int maxEntries = widgetWidth / entryWidth;
 
-	int dataIndex = values.size() - widgetWidth;
-	if (dataIndex < 0) {
-		dataIndex = 0;
+	int startIndex = 0;
+	if ((int)histogram.size() > maxEntries) {
+		startIndex = histogram.size() - maxEntries;
 	}
 
-	int startX = widgetWidth - values.size() + dataIndex;
-	for (int i = startX, j = dataIndex; j < (int)values.size(); ++i, ++j) {
-		int x = i;
-		int y = widgetHeight - (values[j] * widgetHeight / 100);
+	for (int i = startIndex; i < (int)histogram.size(); ++i) {
+		HistogramEntry entry;
+		scale(entry, histogram[i], scaling);
+		int x = (i - startIndex) * entryWidth;
 
-		painter.drawLine(x, widgetHeight, x, y);
+		QRect maxBar(x, widgetHeight - entry.max, 3, entry.max);
+		painter.fillRect(maxBar, maxColor);
+
+		QRect avgBar(x, widgetHeight - entry.avg, 3, entry.avg);
+		painter.fillRect(avgBar, avgColor);
 	}
 }
 
-void Chart::paintMax(QPainter &painter, std::deque<int> values) {
-	const int widgetHeight = height();
-	const int widgetWidth = width();
-
-	int dataIndex = values.size() - widgetWidth;
-	if (dataIndex < 0) {
-		dataIndex = 0;
-	}
-
-	int prevX = widgetWidth - values.size() + dataIndex;
-	int prevY = widgetHeight - (values[dataIndex] * widgetHeight / 100);
-
-	for (int i = prevX + 1, j = dataIndex + 1; j < (int)values.size(); ++i, ++j) {
-		int x = i;
-		int y = widgetHeight - (values[j] * widgetHeight / 100);
-
-		painter.drawLine(prevX, prevY, x, y);
-
-		prevX = x;
-		prevY = y;
-	}
+void Chart::scale(HistogramEntry &scaled, HistogramEntry *source, float scale) {
+	scaled.avg = scale * (float)source->avg;
+	scaled.max = scale * (float)source->max;
 }

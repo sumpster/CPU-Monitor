@@ -19,8 +19,8 @@ class Chart : public QWidget {
 		void paintEvent(QPaintEvent *event) override;
 
 	private:
-		void paintAvg(QPainter &painter, std::deque<int> values);
-		void paintMax(QPainter &painter, std::deque<int> values);
+		void paintBars(QPainter &painter, std::deque<HistogramEntry*> histogram);
+		void scale(HistogramEntry &scaled, HistogramEntry *source, float scale);
 
 		CoreStats* data;
 };

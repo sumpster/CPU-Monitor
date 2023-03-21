@@ -46,9 +46,9 @@ int main(int argc, char *argv[]) {
 	efficiencyChart.setData(model.getSection(CoreType::Efficiency));
 
 	QObject::connect(&model, SIGNAL(updated()), &performanceDots, SLOT(update()));
-	QObject::connect(&model, SIGNAL(updated()), &performanceChart, SLOT(update()));
+	QObject::connect(&model, SIGNAL(updatedHistogram()), &performanceChart, SLOT(update()));
 	QObject::connect(&model, SIGNAL(updated()), &efficiencyDots, SLOT(update()));
-	QObject::connect(&model, SIGNAL(updated()), &efficiencyChart, SLOT(update()));
+	QObject::connect(&model, SIGNAL(updatedHistogram()), &efficiencyChart, SLOT(update()));
     QObject::connect(&timer, &QTimer::timeout, [&]() {
 		model.update();
     });
