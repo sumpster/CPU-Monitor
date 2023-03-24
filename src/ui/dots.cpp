@@ -6,11 +6,13 @@
 
 #define VMAX 100
 
-Dots::Dots(QString type, QWidget *parent) : QWidget(parent) {
+Dots::Dots(const QString *type, QWidget *parent) : QWidget(parent) {
 	setMinimumSize(QSize(100, 100));
-	setProperty("type", type);
+	setProperty("type", *type);
 	data = {};
 }
+
+Dots::~Dots() {}
 
 void Dots::paintEvent(QPaintEvent *event) {
 	Q_UNUSED(event);

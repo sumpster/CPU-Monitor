@@ -7,10 +7,12 @@
 
 #include "chart.h"
 
-Chart::Chart(QString type, QWidget *parent) : QWidget(parent) {
+Chart::Chart(const QString *type, QWidget *parent) : QWidget(parent) {
 	setMinimumSize(100, 100);
-	setProperty("type", type);
+	setProperty("type", *type);
 }
+
+Chart::~Chart() {}
 
 void Chart::setData(CoreStats* data) {
 	this->data = data;

@@ -6,10 +6,11 @@
 #include "../model.h"
 
 class Dots : public QWidget {
-	Q_PROPERTY(QString type)
+	Q_OBJECT
 	
 	public:
-		Dots(QString type, QWidget *parent = nullptr);
+		Dots(const QString *type, QWidget *parent = nullptr);
+		~Dots();
 		void setData(CoreStats* data);
 
 	protected:

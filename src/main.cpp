@@ -13,8 +13,8 @@
 
 #include <vector>
 
-#define PERFORMANCE "performance"
-#define EFFICIENCY "efficiency"
+const QString *PERFORMANCE = new QString("performance");
+const QString *EFFICIENCY = new QString("efficiency");
 
 QString loadStyle() {
     QFile file(":dark.qss");
@@ -28,46 +28,50 @@ QString loadStyle() {
 }
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
+	QApplication app(argc, argv);
 	app.setStyleSheet(loadStyle());
 
-	CPUAccess access;
-	Model model(access);
-    QTimer timer;
+	CPUAccess* access = new CPUAccess();
+	Model* model = new Model(*access);
+	QTimer* timer = new QTimer();
 
-	Dots performanceDots(PERFORMANCE);
-	Chart performanceChart(PERFORMANCE);
-	Dots efficiencyDots(EFFICIENCY);
-	Chart efficiencyChart(EFFICIENCY);
+	Dots* performanceDots = new Dots(PERFORMANCE);
+	Chart* performanceChart = new Chart(PERFORMANCE);
+	Dots* efficiencyDots = new Dots(EFFICIENCY);
+	Chart* efficiencyChart = new Chart(EFFICIENCY);
 
-	performanceDots.setData(model.getSection(CoreType::Performance));
-	performanceChart.setData(model.getSection(CoreType::Performance));
-	efficiencyDots.setData(model.getSection(CoreType::Efficiency));
-	efficiencyChart.setData(model.getSection(CoreType::Efficiency));
+	performanceDots->setData(model->getSection(CoreType::Performance));
+	performanceChart->setData(model->getSection(CoreType::Performance));
+	efficiencyDots->setData(model->getSection(CoreType::Efficiency));
+	efficiencyChart->setData(model->getSection(CoreType::Efficiency));
 
-	QObject::connect(&model, SIGNAL(updated()), &performanceDots, SLOT(update()));
-	QObject::connect(&model, SIGNAL(updatedHistogram()), &performanceChart, SLOT(update()));
-	QObject::connect(&model, SIGNAL(updated()), &efficiencyDots, SLOT(update()));
-	QObject::connect(&model, SIGNAL(updatedHistogram()), &efficiencyChart, SLOT(update()));
-    QObject::connect(&timer, &QTimer::timeout, [&]() {
-		model.update();
-    });
+	QObject::connect(model, SIGNAL(updated()), performanceDots, SLOT(update()));
+	QObject::connect(model, SIGNAL(updatedHistogram()), performanceChart, SLOT(update()));
+	QObject::connect(model, SIGNAL(updated()), efficiencyDots, SLOT(update()));
+	QObject::connect(model, SIGNAL(updatedHistogram()), efficiencyChart, SLOT(update()));
+	QObject::connect(timer, &QTimer::timeout, [&]() {
+		model->update();
+	});
 
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setContentsMargins(0, 10, 0, 0);
-    layout->setSpacing(0); 
+	QVBoxLayout *layout = new QVBoxLayout;
+	layout->setContentsMargins(0, 10, 0, 0);
+	layout->setSpacing(0);
 
-    Section *perfSection = new Section("Performance Cores", &performanceDots, &performanceChart);
-    Section *effSection = new Section("Efficiency Cores", &efficiencyDots, &efficiencyChart);
-    layout->addWidget(perfSection);
-    layout->addWidget(effSection);
+	Section* perfSection = new Section("Performance Cores", performanceDots, performanceChart);
+	Section* effSection = new Section("Efficiency Cores", efficiencyDots, efficiencyChart);
+	layout->addWidget(perfSection);
+	layout->addWidget(effSection);
 
-    QWidget widget;
-    widget.setLayout(layout);
-    widget.setWindowTitle("CPU Monitor");
-	widget.setMinimumSize(700, 400);
-    widget.show();
+	QWidget* widget = new QWidget();
+	widget->setLayout(layout);
+	widget->setWindowTitle("CPU Monitor");
+	widget->setMinimumSize(700, 400);
+	widget->show();
 
-    timer.start(100);
-    return app.exec();
+	timer->start(100);
+	int ret = app.exec();
+
+	delete widget;
+
+	return ret;
 }

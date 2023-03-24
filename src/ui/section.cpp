@@ -26,6 +26,8 @@ Section::Section(const QString &title, QWidget *left, QWidget *right, QWidget *p
 	setLayout(rowLayout);
 }
 
+Section::~Section() {}
+
 void Section::resizeEvent(QResizeEvent *event) {
 	Q_UNUSED(event);
 	int h = left->height();

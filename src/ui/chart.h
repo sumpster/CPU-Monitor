@@ -9,10 +9,11 @@
 #include "../model.h"
 
 class Chart : public QWidget {
-	Q_PROPERTY(QString type)
+	Q_OBJECT
 
 	public:
-		Chart(QString type, QWidget *parent = nullptr);
+		Chart(const QString *type, QWidget *parent = nullptr);
+		~Chart();
 		void setData(CoreStats *data);
 
 	protected:
