@@ -10,3 +10,7 @@ SOURCES += src/main.cpp src/model.cpp src/hw/linux.cpp src/ui/section.cpp src/ui
 HEADERS += src/model.h src/ui/section.h src/ui/dots.h src/ui/chart.h
 
 RESOURCES += resources/resources.qrc
+
+OBJECTS_DIR = build/obj
+MOC_DIR = build/moc
+RCC_DIR = build/qrc
