@@ -1,8 +1,8 @@
-#include "model.h"
+#include "Model.h"
 
 #define BUCKET_SIZE 3
 
-Model::Model(CPUAccess access) : QObject(), access(access) {
+Model::Model(CPUAccess *access) : QObject(), access(access) {
 	update();
 }
 
@@ -32,10 +32,15 @@ std::string Model::getNameForType(CoreType type) {
 }
 
 void Model::update() {
+	updateUsage();
+	updateHistogram();
+}
+
+void Model::updateUsage() {
 	for (CoreStats *cs : stats)
 		cs->usage.clear();
 
-	std::vector<CoreUsage> usageData = access.getCoreUsage();
+	std::vector<CoreUsage> usageData = access->getCoreUsage();
 	for (CoreUsage cu : usageData) {
 		bool exists = false;
 		for (CoreStats *cs : stats) {
@@ -46,17 +51,21 @@ void Model::update() {
 				break;
 			}
 		}
-		if (exists)
-			continue;
 
-		int usage = computeUsage(cu.used, cu.idle);
-		CoreStats *cs = new CoreStats;
-		cs->type = cu.type;
-		cs->usage = std::vector<int>(1, usage);
-		cs->histogram = std::deque<HistogramEntry*>();
-		stats.push_back(cs);
+		if (!exists) {
+			int usage = computeUsage(cu.used, cu.idle);
+			CoreStats *cs = new CoreStats;
+			cs->type = cu.type;
+			cs->usage = std::vector<int>(1, usage);
+			cs->histogram = std::deque<HistogramEntry*>();
+			stats.push_back(cs);
+		}
 	}
 
+	emit updated();
+}
+
+void Model::updateHistogram() {
 	bool updateHistogram = false;
 	for (CoreStats *cs : stats) {
 		int avg = 0;
@@ -70,24 +79,18 @@ void Model::update() {
 
 		HistogramEntry *current = cs->histogram.size() == 0 ? nullptr : cs->histogram.back();
 
-		if (current == nullptr || current->n == BUCKET_SIZE) {
-			current = new HistogramEntry;
-			current->avg = avg;
-			current->max = max;
-			current->n = 1;
+		if (current == nullptr || current->getCount() == BUCKET_SIZE) {
+			current = new HistogramEntry(1, avg, max);
 			cs->histogram.push_back(current);
+
 		} else {
-			current->n++;
-			current->avg += avg;
-			if (max > current->max)
-				current->max = max;
+			current->accumulate(avg, max);
 		}
 
-		if (current->n == BUCKET_SIZE)
+		if (current->getCount() == BUCKET_SIZE)
 			updateHistogram = true;
 	}
 
-	emit updated();
 	if (updateHistogram)
 		emit updatedHistogram();
 }

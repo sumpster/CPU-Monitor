@@ -5,11 +5,11 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
-#include "model.h"
+#include "model/Model.h"
 #include "hw/linux.h"
-#include "ui/dots.h"
-#include "ui/chart.h"
-#include "ui/section.h"
+#include "ui/Dots.h"
+#include "ui/Chart.h"
+#include "ui/Section.h"
 
 #include <vector>
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	app.setStyleSheet(loadStyle());
 
 	CPUAccess* access = new CPUAccess();
-	Model* model = new Model(*access);
+	Model* model = new Model(access);
 	QTimer* timer = new QTimer();
 
 	Dots* performanceDots = new Dots(PERFORMANCE);

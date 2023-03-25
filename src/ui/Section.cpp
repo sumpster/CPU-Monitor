@@ -3,7 +3,7 @@
 #include <QLabel>
 #include <QWidget>
 
-#include "section.h"
+#include "Section.h"
 
 Section::Section(const QString &title, QWidget *left, QWidget *right, QWidget *parent) : QWidget(parent), left(left) {
 	QVBoxLayout *rowLayout = new QVBoxLayout();

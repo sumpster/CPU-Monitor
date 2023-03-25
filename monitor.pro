@@ -5,9 +5,13 @@ CONFIG += debug
 TARGET = monitor
 TEMPLATE = app
 
-SOURCES += src/main.cpp src/model.cpp src/hw/linux.cpp src/ui/section.cpp src/ui/dots.cpp src/ui/chart.cpp
+SOURCES += src/main.cpp
+SOURCES += src/model/Model.cpp src/model/HistogramEntry.cpp 
+SOURCES += src/hw/linux.cpp
+SOURCES += src/ui/section.cpp src/ui/dots.cpp src/ui/chart.cpp
 
-HEADERS += src/model.h src/ui/section.h src/ui/dots.h src/ui/chart.h
+HEADERS += src/model/Model.h src/model/HistogramEntry.h 
+HEADERS += src/ui/section.h src/ui/dots.h src/ui/chart.h
 
 RESOURCES += resources/resources.qrc
 

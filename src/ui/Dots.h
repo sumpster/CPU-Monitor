@@ -3,7 +3,7 @@
 #include <QString>
 #include <QtWidgets>
 
-#include "../model.h"
+#include "../model/Model.h"
 
 class Dots : public QWidget {
 	Q_OBJECT

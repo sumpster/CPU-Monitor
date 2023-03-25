@@ -5,12 +5,9 @@
 #include <deque>
 #include <QObject>
 
-#include "hw/linux.h"
-struct HistogramEntry {
-    int max;
-    int avg;
-	int n;
-};
+#include "../hw/linux.h"
+
+#include "HistogramEntry.h"
 
 struct CoreStats {
 	CoreType type;
@@ -22,7 +19,7 @@ class Model : public QObject {
 	Q_OBJECT
 	
 	public:
-		Model(CPUAccess access);
+		Model(CPUAccess *access);
 		~Model();
 		void update();
 		int getSectionCount();
@@ -34,8 +31,10 @@ class Model : public QObject {
 		void updatedHistogram();
 
 	private:
+		void updateUsage();
+		void updateHistogram();
 		int computeUsage(int used, int idle);
 
-		CPUAccess access;
+		CPUAccess *access;
 		std::vector<CoreStats*> stats;
 };

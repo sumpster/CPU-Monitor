@@ -6,7 +6,7 @@
 #include <QWidget>
 #include <QPainter>
 
-#include "../model.h"
+#include "../model/Model.h"
 
 class Chart : public QWidget {
 	Q_OBJECT

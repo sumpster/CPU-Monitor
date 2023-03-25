@@ -2,7 +2,7 @@
 #include <QPalette>
 #include <QVariant>
 
-#include "dots.h"
+#include "Dots.h"
 
 #define VMAX 100
 
